@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Affairek Platform</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+/* GLOBAL */
+body{
+    margin:0;
+    font-family: "Inter", sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#fff;
+}
+
+/* WATERMARK */
+body::after{
+    content:"";
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    width:180px;
+    height:180px;
+    background:url('assets/icon.png') no-repeat center;
+    background-size:contain;
+    opacity:0.05;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:240px;
+    height:100vh;
+    position:fixed;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    padding:20px;
+    border-right:1px solid rgba(255,255,255,0.1);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.logo img{
+    height:60px;
+}
+
+/* MENU */
+.menu button{
+    width:100%;
+    padding:12px;
+    margin:6px 0;
+    background:none;
+    border:none;
+    color:#cbd5e1;
+    text-align:left;
+    cursor:pointer;
+    border-radius:10px;
+    font-size:15px;
+}
+
+.menu button:hover{
+    background:#1e293b;
+    color:white;
+}
+
+/* MAIN */
+.main{
+    margin-left:260px;
+    padding:30px;
+}
+
+/* HEADER */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.avatar{
+    background:#3b82f6;
+    padding:10px 14px;
+    border-radius:50%;
+}
+
+/* HERO */
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.hero img{
+    height:80px;
+    opacity:0.9;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+/* CARD */
+.card{
+    display: flex;
+    flex-direction: column;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    padding:20px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+/* KPI */
+.kpis{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+}
+
+.kpi{
+    background:rgba(255,255,255,0.08);
+    padding:12px;
+    border-radius:10px;
+    font-size:14px;
+}
+
+/* FIX GLOBAL */
+* {
+    box-sizing: border-box;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 8px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(15,23,42,0.8);
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+/* FOCUS EFFECT */
+input:focus, select:focus {
+    border: 1px solid #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+/* BUTTON */
+button{
+    padding:10px;
+    border:none;
+    background:#3b82f6;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#2563eb;
+}
+
+/* CHAT */
+#chatbox{
+    height:150px;
+    overflow:auto;
+    background:#0f172a;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+}
+
+/* LIST */
+ul{
+    padding-left:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<div class="logo">
+<img src="assets/icon.png">
+</div>
+
+<div class="menu">
+<button>Dashboard</button>
+<button>Finance</button>
+<button>Clients</button>
+<button>Fiscalité</button>
+<button>Marketing</button>
+<button>Juridique</button>
+<button>Cabinet</button>
+</div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- HEADER -->
+<div class="topbar">
+
+<div style="display:flex;align-items:center;gap:12px;">
+<img src="assets/logo.png" style="height:45px;">
+<div>
+<div style="font-weight:bold;">Affairek</div>
+<div style="font-size:12px;color:#94a3b8;">
+L'expertise qui simplifie vos affaires
+</div>
+</div>
+</div>
+
+<div class="avatar">A</div>
+
+</div>
+
+<!-- HERO -->
+<div class="card hero">
+
+<div>
+<h2>Bienvenue sur Affairek</h2>
+<p style="color:#94a3b8;">
+Pilotez votre entreprise avec intelligence : finance, fiscalité, clients et IA.
+</p>
+</div>
+
+<img src="assets/logo_small.png">
+
+</div>
+
+<!-- GRID -->
+<div class="grid">
+
+<!-- DASHBOARD -->
+<div class="card">
+
+<h3>Financial Overview</h3>
+
+<div class="kpis">
+<div class="kpi">💰 Revenue: <span id="revenue">0</span></div>
+<div class="kpi">💸 Expenses: <span id="expenses">0</span></div>
+<div class="kpi">📈 Profit: <span id="profit">0</span></div>
+</div>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+<!-- TRANSACTION -->
+<div class="card">
+
+<h3>Add Transaction</h3>
+
+<select id="type">
+<option value="revenue">Revenue</option>
+<option value="expense">Expense</option>
+</select>
+
+<label>Amount</label>
+<input id="amount" placeholder="Enter amount">
+<input id="description" placeholder="Description">
+
+<button onclick="addTransaction()">Add</button>
+
+</div>
+
+<!-- CLIENT -->
+<div class="card">
+
+<h3>Clients</h3>
+
+<input id="client_name" placeholder="Name">
+<input id="client_email" placeholder="Email">
+<input id="client_phone" placeholder="Phone">
+
+<button onclick="addClient()">Add Client</button>
+
+<ul id="client_list"></ul>
+
+</div>
+
+<!-- AI -->
+<div class="card">
+
+<h3>AI Copilot</h3>
+
+<div id="chatbox"></div>
+
+<input id="question" placeholder="Ask something...">
+<button onclick="askAI()">Ask</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const API="http://127.0.0.1:8000"
+
+let chart
+
+async function loadDashboard(){
+
+let res=await fetch(API+"/dashboard")
+let data=await res.json()
+
+document.getElementById("revenue").innerText=data.revenue
+document.getElementById("expenses").innerText=data.expenses
+document.getElementById("profit").innerText=data.profit
+
+drawChart(data)
+}
+
+function drawChart(data){
+
+let ctx=document.getElementById("chart")
+
+if(chart) chart.destroy()
+
+chart=new Chart(ctx,{
+type:"line",
+data:{
+labels:["Revenue","Expenses","Profit"],
+datasets:[{
+label:"Performance",
+data:[data.revenue,data.expenses,data.profit],
+borderWidth:3
+}]
+}
+})
+
+}
+
+async function addTransaction(){
+
+let type=document.getElementById("type").value
+let amount=parseFloat(document.getElementById("amount").value)
+let description=document.getElementById("description").value
+
+await fetch(API+"/transaction",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({type,amount,description})
+})
+
+loadDashboard()
+}
+
+async function addClient(){
+
+let name=document.getElementById("client_name").value
+let email=document.getElementById("client_email").value
+let phone=document.getElementById("client_phone").value
+
+await fetch(API+"/client",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({name,email,phone})
+})
+
+loadClients()
+}
+
+async function loadClients(){
+
+let res=await fetch(API+"/clients")
+let data=await res.json()
+
+let list=document.getElementById("client_list")
+list.innerHTML=""
+
+data.forEach(c=>{
+let li=document.createElement("li")
+li.innerText=c.name+" ("+c.email+")"
+list.appendChild(li)
+})
+
+}
+
+async function askAI(){
+
+let q=document.getElementById("question").value
+
+let res=await fetch(API+"/ai?question="+q)
+let data=await res.json()
+
+let chat=document.getElementById("chatbox")
+
+chat.innerHTML += "<b>You:</b> "+q+"<br>"
+chat.innerHTML += "<b>AI:</b> "+data.answer+"<br><br>"
+
+}
+
+loadDashboard()
+loadClients()
+
+</script>
+
+</body>
+</html>
