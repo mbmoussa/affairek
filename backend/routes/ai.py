@@ -6,7 +6,7 @@ from database import get_db
 
 router = APIRouter()
 
-openai.api_key = "YOUR_API_KEY"
+openai.api_key = "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"
 
 
 @router.get("/ai")
